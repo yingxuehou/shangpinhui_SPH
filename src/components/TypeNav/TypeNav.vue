@@ -1,8 +1,13 @@
 <template>
   <div class="type-nav">
     <div class="container">
-        <div @mouseleave="currentIndex = -1">
-            <h2 class="all">全部商品分类</h2>
+        <div @mouseleave="handleMouseLeave">
+            <h2 
+                class="all" 
+                @mouseenter="showPane = true"    
+            >
+                全部商品分类
+            </h2>
             <nav class="nav">
                 <a href="###">服装城</a>
                 <a href="###">美妆馆</a>
@@ -13,52 +18,54 @@
                 <a href="###">有趣</a>
                 <a href="###">秒杀</a>
             </nav>
-            <div class="sort">
-                <div class="all-sort-list2">
-                    <div 
-                        v-for="(c1,index) in categoryList" 
-                        :key="c1.categoryId" 
-                        class="item"
-                        :class="{active: currentIndex === index}"
-                        @mouseenter="handleEnter(index)"
-                        @click="goSearch"
-                    >
-                        <h3>
-                            <a 
-                                :data-name="c1.categoryName" 
-                                :data-category1Id="c1.categoryId" 
-                                href="javascript:void(0)"
-                            >
-                                {{c1.categoryName}}
-                            </a>
-                        </h3>
-                        <div class="item-list clearfix">
-                            <div class="subitem">
-                                <dl v-for="c2 in c1.categoryChild" :key="c2.categoryId" class="fore">
-                                    <dt>
-                                        <a 
-                                            :data-name="c2.categoryName"
-                                            :data-category2Id="c2.categoryId"
-                                            href="javascript:void(0)">
-                                            {{c2.categoryName}}
-                                        </a>
-                                    </dt>
-                                    <dd>
-                                        <em v-for="c3 in c2.categoryChild" :key="c3.categoryId">
+            <transition name="sort">
+                <div v-show="showPane" class="sort">
+                    <div class="all-sort-list2">
+                        <div 
+                            v-for="(c1,index) in categoryList" 
+                            :key="c1.categoryId" 
+                            class="item"
+                            :class="{active: currentIndex === index}"
+                            @mouseenter="handleEnter(index)"
+                            @click="goSearch"
+                        >
+                            <h3>
+                                <a 
+                                    :data-name="c1.categoryName" 
+                                    :data-category1Id="c1.categoryId" 
+                                    href="javascript:void(0)"
+                                >
+                                    {{c1.categoryName}}
+                                </a>
+                            </h3>
+                            <div class="item-list clearfix">
+                                <div class="subitem">
+                                    <dl v-for="c2 in c1.categoryChild" :key="c2.categoryId" class="fore">
+                                        <dt>
                                             <a 
-                                                :data-name="c3.categoryName"
-                                                :data-category3Id="c3.categoryId"
+                                                :data-name="c2.categoryName"
+                                                :data-category2Id="c2.categoryId"
                                                 href="javascript:void(0)">
-                                                {{c3.categoryName}}
+                                                {{c2.categoryName}}
                                             </a>
-                                        </em>
-                                    </dd>
-                                </dl>
+                                        </dt>
+                                        <dd>
+                                            <em v-for="c3 in c2.categoryChild" :key="c3.categoryId">
+                                                <a 
+                                                    :data-name="c3.categoryName"
+                                                    :data-category3Id="c3.categoryId"
+                                                    href="javascript:void(0)">
+                                                    {{c3.categoryName}}
+                                                </a>
+                                            </em>
+                                        </dd>
+                                    </dl>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </transition>
         </div>
     </div>
 </div>
@@ -73,7 +80,8 @@
     name:'TypeNav',
     data() {
         return {
-            currentIndex: -1
+            currentIndex: -1,
+            showPane: true // 是否显示分类面板
         }
     },
     methods: {
@@ -81,25 +89,41 @@
         goSearch(event){
             const {name,category1id,category2id,category3id} = event.target.dataset
             if(name){
-                let params = {name}
+                let query = {name}
                 if(category1id){
-                    params.category1id = category1id
+                    query.category1id = category1id
                 }else if(category2id){
-                    params.category2id = category2id
+                    query.category2id = category2id
                 }else if(category3id){
-                    params.category3id = category3id
+                    query.category3id = category3id
                 }
-                this.$router.push({path:'/search',query:params})
+                let routeMsg = {
+                    path: '/search',
+                    query
+                }
+                this.$route.params.keywords && (routeMsg.params = this.$route.params)
+                this.$router.push(routeMsg)
             }
         },
 
         // 鼠标进入----防抖,_.debounce方法中的回调只能写成普通函数，否则this指向有问题
         handleEnter: debounce(function(index){
             this.currentIndex = index
-        },50)
+        },50),
+
+        // 鼠标移出标题
+        handleMouseLeave(){
+            // 所有一级分类失去高亮
+            this.currentIndex = -1
+            // 非首页，隐藏
+            this.$route.name !== 'home' && (this.showPane = false)
+        }
     },
     created(){
+        // 获取三级联动数据
         this.$store.dispatch('getCategoryList')
+        // 判断三级面板是否显示
+        this.showPane = this.$route.name === 'home'
     },
     computed: {
         ...mapState({
@@ -230,6 +254,17 @@
                 }
             }
         }
+    }
+
+    .sort-enter{
+        height: 0;
+    }
+
+    .sort-enter-to{
+        height: 461px;
+    }
+    .sort-enter-active{
+        transition: all 0.5s linear;
     }
 </style>
 

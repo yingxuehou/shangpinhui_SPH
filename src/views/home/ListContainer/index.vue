@@ -3,19 +3,7 @@
     <div class="sortList clearfix">
       <div class="center">
         <!--banner轮播-->
-        <div class="swiper-container" id="mySwiper">
-          <div class="swiper-wrapper">
-            <div class="swiper-slide">
-              <img src="./images/banner1.jpg" />
-            </div>
-          </div>
-          <!-- 如果需要分页器 -->
-          <div class="swiper-pagination"></div>
-
-          <!-- 如果需要导航按钮 -->
-          <div class="swiper-button-prev"></div>
-          <div class="swiper-button-next"></div>
-        </div>
+        <Carouse :bannerList="bannerList" />
       </div>
       <div class="right">
         <div class="news">
@@ -101,8 +89,42 @@
 </template>
 
 <script>
+// import Swiper from 'swiper'
+// import "swiper/css/swiper.css"
+
+import Carouse from '@/components/carouse/Carouse'
+
+import {mapState} from 'vuex'
   export default {
     name: 'ListContainer',
+    components:{Carouse},
+    mounted(){
+      this.$store.dispatch('getBannerList')
+    },
+    computed:{
+      ...mapState({
+        bannerList: state=>state.home.bannerList
+      })
+    },
+    // watch:{
+    //   bannerList:{
+    //     handler(){
+    //       this.$nextTick(()=>{
+    //         new Swiper(this.$refs.mySwiper,{
+    //           loop: true,
+    //           pagination: {
+    //             el:'.swiper-pagination',
+    //             clickable: true,
+    //           },
+    //           navigation: {
+    //             nextEl: '.swiper-button-next',
+    //             prevEl: '.swiper-button-prev',
+    //           }
+    //         })
+    //       })
+    //     }
+    //   }
+    // }
   }
 </script>
 

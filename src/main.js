@@ -3,14 +3,14 @@ import App from './App.vue'
 
 import router from '@/router'
 import store from '@/store'
+import mock from '@/mock'
 
-import Header from '@/components/header/Header'
-import Footer from '@/components/footer/Footer'
+import TypeNav from '@/components/TypeNav/TypeNav'
 
 Vue.config.productionTip = false
 
-Vue.component('Header',Header)
-Vue.component('Footer',Footer)
+// 注册全局组件
+Vue.component('TypeNav',TypeNav)
 
 new Vue({
   router,

@@ -1,9 +1,11 @@
 <template>
-  <div>search</div>
+  <div>
+    <TypeNav />
+  </div>
 </template>
 <script>
   export default {
-    name:'search'
+    name:'search',
   }
 </script>
 <style lang="less" scoped>
