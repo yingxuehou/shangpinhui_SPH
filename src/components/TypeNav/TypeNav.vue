@@ -89,19 +89,19 @@
         goSearch(event){
             const {name,category1id,category2id,category3id} = event.target.dataset
             if(name){
-                let query = {name}
+                let query = {categoryName:name}
                 if(category1id){
-                    query.category1id = category1id
+                    query.category1Id = category1id
                 }else if(category2id){
-                    query.category2id = category2id
+                    query.category2Id = category2id
                 }else if(category3id){
-                    query.category3id = category3id
+                    query.category3Id = category3id
                 }
                 let routeMsg = {
                     path: '/search',
                     query
                 }
-                this.$route.params.keywords && (routeMsg.params = this.$route.params)
+                this.$route.params && (routeMsg.params = this.$route.params)
                 this.$router.push(routeMsg)
             }
         },
@@ -119,9 +119,7 @@
             this.$route.name !== 'home' && (this.showPane = false)
         }
     },
-    created(){
-        // 获取三级联动数据
-        this.$store.dispatch('getCategoryList')
+    created(){    
         // 判断三级面板是否显示
         this.showPane = this.$route.name === 'home'
     },

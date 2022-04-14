@@ -9,3 +9,6 @@ export const reqBannerList = () => mockRequest({ url: '/mock/banner', method: 'g
 
 // 获取楼层数据
 export const reqFloorData = () => mockRequest({ url:'/mock/floor', method: 'get' })
+
+// 获取搜索商品数据
+export const reqGoodsList = (params) => request({url:'/list',method:'post',data:params})

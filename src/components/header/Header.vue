@@ -32,7 +32,7 @@
         </h1>
         <div class="searchArea">
             <form action="###" class="searchForm">
-                <input v-model="keywords" type="text" id="autocomplete" class="input-error input-xxlarge" />
+                <input v-model="keyword" type="text" id="autocomplete" class="input-error input-xxlarge" />
                 <button @click="goSearch" class="sui-btn btn-xlarge btn-danger" type="button">搜索</button>
             </form>
         </div>
@@ -45,7 +45,7 @@
     name:'Header',
     data(){
         return{
-            keywords: ''
+            keyword: ''
         }
     },
     methods:{
@@ -55,11 +55,17 @@
         goSearch(){
             let routeMsg = {
                 name: 'search',
-                params:{keywords: this.keywords}
+                path:'/search',
+                params:{keyword: this.keyword}
             }
             this.$route.query && (routeMsg.query = this.$route.query)
             this.$router.push(routeMsg)
         }
+    },
+    mounted(){
+        this.$bus.$on('clearKeyword',()=>{
+            this.keyword = ''
+        })
     }
   }
 </script>

@@ -16,6 +16,10 @@ export default {
   components:{
     Header,
     Footer
+  },
+  mounted(){
+    // 获取三级联动数据
+    this.$store.dispatch('getCategoryList')
   }
 }
 </script>
