@@ -81,7 +81,12 @@
           </div>
           <div class="goods-list">
             <ul class="yui3-g">
-              <li v-for="goods in goodsList" :key="goods.id" class="yui3-u-1-5">
+              <li 
+                v-for="goods in goodsList" 
+                :key="goods.id" 
+                class="yui3-u-1-5"
+                @click="goDetail(goods.id)"
+              >
                 <div class="list-wrap">
                   <div class="p-img">
                     <router-link to="/detail">
@@ -250,6 +255,10 @@ export default {
       this.params.pageNo = page;
       this.getData();
     },
+    // 跳转到详情页
+    goDetail(id){
+      this.$router.push({name:"detail",query:{skuId:id}})
+    }
   },
   created() {
     // 合并请求参数

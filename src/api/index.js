@@ -14,3 +14,4 @@ export const reqFloorData = () => mockRequest({ url:'/mock/floor', method: 'get'
 export const reqGoodsList = (params) => request({url:'/list',method:'post',data:params})
 
 // 获取商品详情
+export const reqGoodsInfo = (skuId) => request({url:`/item/${skuId}`})
