@@ -1,17 +1,47 @@
 <template>
   <div class="spec-preview">
-    <img src="../images/s1.png" />
-    <div class="event"></div>
+    <img v-if="imageList.length" :src="imageList[currentIndex].imgUrl" />
+    <div class="event" @mousemove="handleMouseMove($event)"></div>
     <div class="big">
-      <img src="../images/s1.png" />
+      <img v-if="imageList.length" ref="imgs" :src="imageList[currentIndex].imgUrl" />
     </div>
-    <div class="mask"></div>
+    <div class="mask" ref="mask"></div>
   </div>
 </template>
 
 <script>
   export default {
     name: "Zoom",
+    props:['imageList'],
+    data () {
+      return {
+        currentIndex: 0
+      }
+    },
+    methods: {
+      // 鼠标移动
+      handleMouseMove(e){
+        // 获取元素
+        const _maskDOM = this.$refs.mask
+        const _imgDOM = this.$refs.imgs
+        // 基于鼠标位置 获取左上距离
+        let _left = e.offsetX - _maskDOM.offsetWidth/2
+        let _top = e.offsetY - _maskDOM.offsetHeight/2
+        // 修正 左上位置
+        _left < 0  ? (_left = 0) : (_left > _maskDOM.offsetWidth ? (_left = _maskDOM.offsetWidth) : (''))
+        _top < 0 ? (_top = 0) : (_top > _maskDOM.offsetHeight ? (_top = _maskDOM.offsetHeight) : (''))
+        // 样式赋值
+        _maskDOM.style.left = _left + 'px'
+        _maskDOM.style.top = _top + 'px'
+        _imgDOM.style.left = -2*_left + 'px'
+        _imgDOM.style.top = -2*_top + 'px'
+      }
+    },
+    mounted(){
+      this.$bus.$on("getIndex",(index)=>{
+        this.currentIndex = index
+      })
+    }
   }
 </script>
 

@@ -16,9 +16,9 @@
         <!-- 左侧放大镜区域 -->
         <div class="previewWrap">
           <!--放大镜效果-->
-          <Zoom />
+          <Zoom :imageList="skuImageList"  />
           <!-- 小图列表 -->
-          <ImageList />
+          <ImageList :imageList="skuImageList" />
         </div>
         <!-- 右侧选择区域布局 -->
         <div class="InfoWrap">
@@ -81,7 +81,8 @@
                   v-for="(attrItem,index) in spuSaleAttr.spuSaleAttrValueList" 
                   :key="index" 
                   changepirce="0" 
-                  class="active"
+                  @click="handleAttrClick(index,spuSaleAttr.spuSaleAttrValueList)"
+                  :class="{active:attrItem.isChecked==1}"
                 >
                   {{attrItem.saleAttrValueName}}
                 </dd>
@@ -89,12 +90,12 @@
             </div>
             <div class="cartWrap">
               <div class="controls">
-                <input autocomplete="off" class="itxt" />
-                <a href="javascript:" class="plus">+</a>
-                <a href="javascript:" class="mins">-</a>
+                <input @blur="handleBlur" v-model.number="countNum" autocomplete="off" class="itxt" />
+                <a href="javascript:" @click="countNum++" class="plus">+</a>
+                <a href="javascript:" class="mins" @click="handleDesc">-</a>
               </div>
               <div class="add">
-                <a href="javascript:">加入购物车</a>
+                <a @click="addCart" href="javascript:">加入购物车</a>
               </div>
             </div>
           </div>
@@ -346,8 +347,42 @@ export default {
     Zoom,
   },
 
+  data () {
+    return {
+      currentIndex: 0,
+      countNum:1  
+    }
+  },
+
+  methods: {
+    // 点击属性
+    handleAttrClick(index,arr){
+      arr.forEach(item=>{ item.isChecked = '0'})
+      arr[index].isChecked = '1'
+    },
+    // 数量减
+    handleDesc(){
+      this.countNum > 1 ? this.countNum-- : ''
+    },
+    // 失去焦点
+    handleBlur(){
+      this.countNum = parseInt(this.countNum)
+    },
+    // 添加购物车
+    async addCart(){
+      const res = await this.$store.dispatch('addToCart',{skuId: this.$route.query.skuId,skuNum:this.countNum})
+      if(res == 'OK'){
+        sessionStorage.setItem('goodsinfo',JSON.stringify(this.skuInfo))
+        this.$router.push({name:'addCartSuccess',query:{countNum:this.countNum}})
+      }
+    }
+  },
+
   computed:{
-    ...mapGetters(['categoryView','skuInfo','spuSaleAttrList'])
+    ...mapGetters(['categoryView','skuInfo','spuSaleAttrList']),
+    skuImageList(){
+      return this.skuInfo.skuImageList || []
+    }
   },
 
   mounted(){

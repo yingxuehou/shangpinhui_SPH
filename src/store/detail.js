@@ -1,4 +1,4 @@
-import {reqGoodsInfo} from '@/api/index'
+import {reqGoodsInfo,reqAddToCart} from '@/api/index'
 
 export default {
   state: {
@@ -15,6 +15,14 @@ export default {
       if(res.code === 200){
         commit('SETGOODSINFO',res.data)
       }
+    },
+    async addToCart(state,params){
+      try {
+        const res = await reqAddToCart(params)
+        return 'OK'
+      } catch (error) {
+        return Promise.reject(new Error('fail'))
+      }
     }
   },
   getters: {
@@ -26,6 +34,6 @@ export default {
     },
     spuSaleAttrList(state){
       return state.goodsInfo.spuSaleAttrList || []
-    }
+    },
   }
 }

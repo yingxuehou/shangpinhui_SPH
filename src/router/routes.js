@@ -3,8 +3,18 @@ import Register from '@/views/register'
 import Home from '@/views/home'
 import Search from '@/views/search'
 import Detail from '@/views/detail'
+import AddCartSuccess from '@/views/addCartSuccess'
+import Cart from '@/views/cart'
 
 export default [{
+  name: 'cart',
+  path: '/cart',
+  component: Cart
+},{
+  name: 'addCartSuccess',
+  path: '/addCartSuccess',
+  component: AddCartSuccess
+},{
   name: 'login',
   path: '/login',
   component: Login
