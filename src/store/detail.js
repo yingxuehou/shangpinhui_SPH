@@ -1,8 +1,11 @@
+// 引入uuid工具函数
+import { getToken } from '@/utils/uuidTools'
 import {reqGoodsInfo,reqAddToCart} from '@/api/index'
 
 export default {
   state: {
-    goodsInfo:{}
+    goodsInfo:{},
+    token: localStorage.getItem('uuidToken') ? localStorage.getItem('uuidToken') : getToken()
   },
   mutations: {
     SETGOODSINFO(state,value){
@@ -16,13 +19,14 @@ export default {
         commit('SETGOODSINFO',res.data)
       }
     },
+    // 添加到购物车 或 修改购物车中商品数量
     async addToCart(state,params){
-      try {
         const res = await reqAddToCart(params)
-        return 'OK'
-      } catch (error) {
-        return Promise.reject(new Error('fail'))
-      }
+        if(res.code == 200){
+          return 'OK'
+        }else{
+          return Promise.reject(new Error('fail'))
+        }
     }
   },
   getters: {

@@ -370,10 +370,12 @@ export default {
     },
     // 添加购物车
     async addCart(){
-      const res = await this.$store.dispatch('addToCart',{skuId: this.$route.query.skuId,skuNum:this.countNum})
-      if(res == 'OK'){
+      try {
+        const res = await this.$store.dispatch('addToCart',{skuId: this.$route.query.skuId,skuNum:this.countNum})
         sessionStorage.setItem('goodsinfo',JSON.stringify(this.skuInfo))
         this.$router.push({name:'addCartSuccess',query:{countNum:this.countNum}})
+      } catch (error) {
+        alert("商品添加购物车失败："+error.message)
       }
     }
   },
