@@ -47,6 +47,7 @@
           </li>
           <li class="cart-list-con7">
             <a href="#none"
+               @click="handleDeleteOne(cart.skuId)"
                class="sindelet">删除</a>
             <br>
             <a href="#none">移到收藏</a>
@@ -63,7 +64,7 @@
         <span>全选</span>
       </div>
       <div class="option">
-        <a href="#none">删除选中的商品</a>
+        <a @click="handleDeleteAll" href="#none">删除选中的商品</a>
         <a href="#none">移到我的关注</a>
         <a href="#none">清除下柜商品</a>
       </div>
@@ -86,6 +87,7 @@
 </template>
 
 <script>
+import throttle from 'lodash/throttle'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -102,7 +104,7 @@ export default {
      * skuNum: 数据库中的商品数量
      * event: 事件对象
      */
-    async changeNum(type,skuId,skuNum,event){
+    changeNum: throttle(async function (type,skuId,skuNum,event){
       let _skuNum = 0
       switch (type) {
         case 'add':
@@ -131,9 +133,9 @@ export default {
       } catch (error) {
         alert('修改商品数量失败：' + error.message)
       }
-    },
+    },1000),
     // 单个商品状态改变
-    async handleCheckedChange(skuId,event){
+    handleCheckedChange: throttle(async function (skuId,event){
       const params = {skuID:skuId,isChecked:event.target.checked ? 1 : 0}
       try {
         await this.$store.dispatch('setChecked',params)
@@ -142,7 +144,7 @@ export default {
       } catch (error) {
         alert('修改商品选中状态失败：'+ error.message)
       }
-    },
+    },500),
     // 全选、全不选
     async handleAllCheckChange(e){
       // 派发action，修改所有与商品选中状态
@@ -152,6 +154,31 @@ export default {
         this.getData()
       } catch (error) {
         alert("商品更新失败")
+      }
+    },
+    // 删除一件商品
+    async handleDeleteOne(skuId){
+      try {
+        let res = await this.$store.dispatch('deleteGoods',skuId)
+        // 重新获取数据
+        this.getData()
+      } catch (error) {
+        alert("删除商品失败："+ error.message)
+      }
+    },
+    // 删除全部商品
+    async handleDeleteAll(){
+      if(!this.isCheckAll){
+        alert("请选中所有商品")
+        return
+      }
+
+      try {
+        await this.$store.dispatch('deleteAllGoods')
+        // 重新获取数据
+        this.getData()
+      } catch (error) {
+        alert("删除全部商品失败")
       }
     }
   },

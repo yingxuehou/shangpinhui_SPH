@@ -1,4 +1,4 @@
-import {reqCartList,reqChangeChecked} from '@/api'
+import {reqCartList,reqChangeChecked,reqDeleteGoods} from '@/api'
 export default {
   state: {
     cartInfo: []
@@ -33,6 +33,25 @@ export default {
         promistArr.push(singleP)
       })
       return Promise.all(promistArr)
+    },
+    // 删除一件商品
+    async deleteGoods(context,skuId){
+      let res = await reqDeleteGoods(skuId)
+      if(res.code == 200){
+        return "OK"
+      }else{
+        return Promise.reject(new Error('fail'))
+      }
+    },
+    // 删除全部商品
+    deleteAllGoods({dispatch,getters}){
+      let promissArr = []
+      getters.cartInfoList.forEach(item=>{
+        const singleP = dispatch('deleteGoods',item.skuId)
+        promissArr.push(singleP)
+      })
+
+      return Promise.all(promissArr)
     }
   },
   getters: {
