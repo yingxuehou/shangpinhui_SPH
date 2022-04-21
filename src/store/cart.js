@@ -24,7 +24,7 @@ export default {
       }else{
         return Promise.reject(new Error('fail'))
       }
-    },
+    }, 
     // 修改所有商品的选中状态（全选、全不选）
     setAllGoodsChecked({dispatch,getters},status){
       let promistArr = []
