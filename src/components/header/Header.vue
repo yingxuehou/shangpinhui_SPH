@@ -5,10 +5,14 @@
         <div class="container">
             <div class="loginList">
                 <p>尚品汇欢迎您！</p>
-                <p>
+                <p v-if="!nickName">
                     <span>请</span>
                     <router-link to="/login">登录</router-link>
                     <router-link to="/register" class="register">免费注册</router-link>
+                </p>
+                <p v-else>
+                  <span>欢迎{{nickName}} | </span>
+                  <span @click="handleLogout" style="cursor:pointer;">退出登陆</span>
                 </p>
             </div>
             <div class="typeList">
@@ -41,6 +45,8 @@
 </template>
 
 <script>
+  import {mapState} from 'vuex'
+
   export default {
     name:'Header',
     data(){
@@ -60,7 +66,21 @@
             }
             this.$route.query && (routeMsg.query = this.$route.query)
             this.$router.push(routeMsg)
+        },
+        // 退出登陆
+        async handleLogout(){
+          try {
+            await this.$store.dispatch('getLogout')
+            this.$router.push('/login')
+          } catch (error) {
+            alert('退出登陆失败')
+          }
         }
+    },
+    computed:{
+      ...mapState({
+        nickName: state => state.user.userInfo.nickName
+      })
     },
     mounted(){
         this.$bus.$on('clearKeyword',()=>{

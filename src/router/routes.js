@@ -5,8 +5,13 @@ import Search from '@/views/search'
 import Detail from '@/views/detail'
 import AddCartSuccess from '@/views/addCartSuccess'
 import Cart from '@/views/cart'
+import Trad from '@/views/trade'
 
 export default [{
+  name: 'trad',
+  path: '/trad',
+  component: Trad
+},{
   name: 'cart',
   path: '/cart',
   component: Cart
