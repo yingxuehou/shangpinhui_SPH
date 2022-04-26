@@ -65,7 +65,14 @@ router.beforeEach(async (to,from,next)=>{
       }
     }
   }else{//未登录
-    next()
+    // 如果想加入购物车（跳转到加入购物车成功页面），需要重新登陆后，再进入详情页面重新加入购物车
+    if(to.path == '/addCartSuccess'){
+        next(`/login?redirect=${from.path}?skuId=${from.query.skuId}`) 
+    }else if(to.path == '/cart' || to.path == '/trad' || to.path == '/pay' || to.path == '/paySuccess' || to.path.indexOf('/center')!=-1){ // 如果跳转到 购物车页面、交易页面、支付页面、支付成功页面、个人中心页面——先去登陆
+      next({path:'/login',query:{redirect:to.path}})
+    }else{
+      next()
+    }
   }
 })
 

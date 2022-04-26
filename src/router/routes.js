@@ -9,11 +9,27 @@ import Trad from '@/views/trade'
 import Pay from '@/views/pay'
 import PaySuccess from '@/views/paySuccess'
 import Center from '@/views/center'
+import MyOrder from '@/views/center/myOrder'
+import GroupOrder from '@/views/center/groupOrder'
 
 export default [{
   name: 'center',
   path: '/center',
-  component: Center
+  component: Center,
+  children:[
+    {
+      name: 'myOrder',
+      path:'myOrder',
+      component: MyOrder
+    },{
+      name: 'groupOrder',
+      path: 'groupOrder',
+      component: GroupOrder
+    },{
+      path: '/center',
+      redirect: '/center/myOrder'
+    }
+  ]
 }, {
   name: 'paySuccess',
   path: '/paySuccess',

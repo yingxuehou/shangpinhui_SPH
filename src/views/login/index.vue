@@ -94,8 +94,9 @@ export default {
       let {phone,password} = this
       try {
         let res = await this.$store.dispatch('getLogin',{phone,password})
-        // 跳转到home页
-        this.$router.push('/home')
+        // 跳转
+        let path = this.$route.query.redirect || '/home'
+        this.$router.push(path)
       } catch (error) {
         alert('登陆失败：'+ error.message)
       }

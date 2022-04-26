@@ -77,11 +77,9 @@
     <div class="money clearFix">
       <ul>
         <li>
-          <b
-            ><i>{{ orderDetailInfo.totalNum }}</i
-            >件商品，总商品金额</b
-          >
-          <span>¥{{ orderDetailInfo.totalAmount }}</span>
+          <b>
+            <i>{{ orderDetailInfo.totalNum }}</i>件商品，总商品金额</b>
+            <span>¥{{ orderDetailInfo.totalAmount }}</span>
         </li>
         <li>
           <b>返现：</b>
